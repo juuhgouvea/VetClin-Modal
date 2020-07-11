@@ -5,14 +5,23 @@
         @csrf
         <div class="form-group">
             <label class="font-weight-bold" for="nome">Nome</label>
-            <input type="text" class="form-control" id="nome" name="nome" value="">
+            <input type="text" id="nome" name="nome" value="{{ old('nome') }}" class="form-control {{ $errors->has('nome') ? 'is-invalid' : ''}}">
+            @if($errors->has('nome'))
+                <div class="invalid-feedback">
+                    {{ $errors->first('nome')}}
+                </div>
+            @endif
         </div>
 
         <div class="row">
             <div class="col-sm-12">
                 <div class="form-group">
                     <label class="font-weight-bold" for="descricao">Descrição</label>
-                    <textarea  class="form-control" id="descricao" name="descricao" rows="5" value=""></textarea>
+                    <textarea id="descricao" name="descricao" rows="5" value="{{ old('descricao') }}" class="form-control {{ $errors->has('descricao') ? 'is-invalid' : ''}}"></textarea>
+                    @if($errors->has('descricao'))
+                        <div class="invalid-feedback">
+                        {{ $errors->first('descricao')}}
+                    @endif
                 </div>
             </div>
         </div>

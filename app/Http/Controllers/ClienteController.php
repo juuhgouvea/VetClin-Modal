@@ -72,6 +72,22 @@ class ClienteController extends Controller
             'email' => $request->email
         ]);
 
+        $regras = [
+            'nome' => 'required|max:100|min:10',
+            'telefone' => 'required|max:13|min:11',
+            'email' => 'required|unique:clientes,email'
+        ];
+        $msgs = [
+            "required" => "O preenchimento do campo [:attribute] é obrigatório!",
+            "max" => "O campo [:attribute] possui tamanho máximo de [:max] caracteres.",
+            "min" => "O campo [:attribute] possui tamanho mínimo de [:min] caracteres.",
+            "unique" => "[:attribute] já existente."
+        ];
+
+
+
+        $request->validate($regras, $msgs);
+
         // array_push($aux, $novo);
         // session(['clientes' => $aux]);
 

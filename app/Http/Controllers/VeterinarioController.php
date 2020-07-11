@@ -78,6 +78,18 @@ class VeterinarioController extends Controller
             'especialidade_id' => $request->especialidades
         ]);
 
+        $regras = [
+            'nome' => 'required|max:30|min:5',
+            'crmv' => 'required|max:6|min:6',
+        ];
+        $msgs = [
+            "required" => "O preenchimento do campo [:attribute] é obrigatório!",
+            "max" => "O campo [:attribute] possui tamanho máximo de [:max] caracteres.",
+            "min" => "O campo [:attribute] possui tamanho mínimo de [:min] caracteres.",
+        ];
+
+        $request->validate($regras, $msgs);
+
         return redirect()->route('veterinarios.index');
     }
 
