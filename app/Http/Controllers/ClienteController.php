@@ -7,7 +7,7 @@ use App\Cliente as Cliente;
 
 class ClienteController extends Controller
 {
- 
+
     // public $clientes = [[
     //     'id' => 1,
     //     'nome' => 'Julia Gouvêa',
@@ -66,12 +66,6 @@ class ClienteController extends Controller
         //     'email' => $request->email
         // ];
 
-        Cliente::create([
-            'nome' => $request->nome,
-            'telefone' => $request->telefone,
-            'email' => $request->email
-        ]);
-
         $regras = [
             'nome' => 'required|max:100|min:10',
             'telefone' => 'required|max:13|min:11',
@@ -84,14 +78,18 @@ class ClienteController extends Controller
             "unique" => "[:attribute] já existente."
         ];
 
-
-
         $request->validate($regras, $msgs);
+
+        Cliente::create([
+            'nome' => $request->nome,
+            'telefone' => $request->telefone,
+            'email' => $request->email
+        ]);
 
         // array_push($aux, $novo);
         // session(['clientes' => $aux]);
 
-        
+
 
         return redirect()->route('clientes.index');
     }
@@ -141,7 +139,7 @@ class ClienteController extends Controller
     public function update(Request $request, $id)
     {
         $cliente = Cliente::find($id);
-        
+
         $cliente->fill([
             'nome' => $request->nome,
             'telefone' => $request->telefone,
