@@ -138,6 +138,7 @@ class ClienteController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         $cliente = Cliente::find($id);
 
         $cliente->fill([
@@ -145,6 +146,20 @@ class ClienteController extends Controller
             'telefone' => $request->telefone,
             'email' => $request->email
         ]);
+
+        $regras = [
+            'nome' => 'required|max:100|min:10',
+            'telefone' => 'required|max:13|min:11',
+            'email' => "required|unique:clientes,email,{$id}"
+        ];
+        $msgs = [
+            "required" => "O preenchimento do campo [:attribute] é obrigatório!",
+            "max" => "O campo [:attribute] possui tamanho máximo de [:max] caracteres.",
+            "min" => "O campo [:attribute] possui tamanho mínimo de [:min] caracteres.",
+            "unique" => "[:attribute] já existente."
+        ];
+
+        $request->validate($regras, $msgs);
 
         $cliente->save();
         // $alterado = [

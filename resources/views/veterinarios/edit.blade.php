@@ -5,14 +5,24 @@
         @csrf
         <div class="form-group">
             <label class="font-weight-bold" for="nome">Nome</label>
-            <input type="text" class="form-control" id="nome" name="nome" value="{{ $dados['nome'] }}">
+            <input type="text" id="nome" name="nome" value="{{ old('nome') ? old('nome') : $dados['nome'] }}" class="form-control {{ $errors->has('nome') ? 'is-invalid' : ''}}">
+            @if($errors->has('nome'))
+                <div class="invalid-feedback">
+                    {{ $errors->first('nome')}}
+                </div>
+            @endif
         </div>
 
         <div class="row">
             <div class="col-sm-7">
                 <div class="form-group">
                     <label class="font-weight-bold" for="crmv">CRMV</label>
-                    <input type="text" class="form-control" id="crmv" name="crmv" value="{{ $dados['crmv'] }}">
+                    <input type="text" id="crmv" name="crmv" value="{{ old('crmv') ? old('crmv') : $dados['crmv'] }}" class="form-control {{ $errors->has('crmv') ? 'is-invalid' : ''}}">
+                    @if($errors->has('crmv'))
+                        <div class="invalid-feedback">
+                        {{ $errors->first('crmv')}}
+                    </div>
+            @endif
                 </div>
             </div>
             <div class="col-sm-5">
