@@ -17,3 +17,18 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::resource('clientes', 'ClienteController')
+    ->parameters([
+        'clientes' => 'id'
+    ]);
+
+Route::resource('veterinarios', 'VeterinarioController')
+    ->parameters([
+        'veterinarios' => 'id'
+    ]);
+
+Route::resource('especialidades', 'EspecialidadeController')
+    ->parameters([
+        'especialidades' => 'id'
+    ]);
