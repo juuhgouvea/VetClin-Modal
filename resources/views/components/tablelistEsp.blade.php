@@ -1,6 +1,6 @@
 <div class="table-responsive" style="overflow-x: visible; overflow-y: visible;">
 
-    <table class="mt-5 table table-striped">
+    <table id="tabela-especialidades" class="mt-5 table table-striped">
         <thead>
             <tr>
                 @foreach($headers as $header)
@@ -10,16 +10,18 @@
         </thead>
         <tbody>
             @foreach ($data as $item)
-                <tr>
-                <td class="text-center">{{ $item['nome'] }}</td>
+                <tr data-id="{{ $item['id'] }}">
+                    <td class="text-center">{{ $item['nome'] }}</td>
                     <td class="text-center d-flex align-items-center justify-content-center">
-                        <a class="btn" href="{{ route('especialidades.show', $item['id']) }}"><i class="fas fa-info-circle"></i></a>
-                        <a class="btn" href="{{ route('especialidades.edit', $item['id'])}}"><i class="fas fa-pen"></i></a>
-                        <form action="{{ route('especialidades.destroy', $item['id']) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn" type="submit"><i class="fas fa-trash"></i></button>
-                        </form>
+                        <button class="btn" onclick="visualizar({{ $item['id'] }});">
+                            <i class="fas fa-info-circle"></i>
+                        </button>
+                        <button class="btn" onclick="editar({{ $item['id'] }});">
+                            <i class="fas fa-pen"></i>
+                        </button>
+                        <button class="btn" onclick="remover({{ $item['id'] }}, '{{ $item['nome'] }}');">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </td>
                 </tr>
             @endforeach

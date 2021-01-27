@@ -27,7 +27,7 @@
                 <div class="form-group">
                     <label class="font-weight-bold" for="especialidade">Especialidade</label>
                     <select class="form-control" name="especialidades" id="especialidades">
-                        @foreach( $especialidades as $esp )
+                        @foreach( $especialidades ?? '' as $esp )
                             <option value="{{ $esp['id'] }}"><p> {{ $esp['nome']}} </p></option>
                             @endforeach
                     </select>
