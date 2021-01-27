@@ -36,10 +36,7 @@ class ClienteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        return view('clientes.create');
-    }
+    public function create(){}
 
     /**
      * Store a newly created resource in storage.
@@ -67,7 +64,7 @@ class ClienteController extends Controller
         // ];
 
         $regras = [
-            'nome' => 'required|max:100|min:10',
+            'nome' => 'required|max:100|min:2',
             'telefone' => 'required|max:13|min:11',
             'email' => 'required|unique:clientes,email'
         ];
@@ -80,7 +77,7 @@ class ClienteController extends Controller
 
         $request->validate($regras, $msgs);
 
-        Cliente::create([
+        $cliente = Cliente::create([
             'nome' => $request->nome,
             'telefone' => $request->telefone,
             'email' => $request->email
@@ -91,7 +88,7 @@ class ClienteController extends Controller
 
 
 
-        return redirect()->route('clientes.index');
+        return json_encode($cliente);
     }
 
     /**
@@ -100,8 +97,7 @@ class ClienteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
+    public function show($id){
         // $aux = session('clientes');
         // $indice = array_search($id, array_column($aux, 'id'));
         // if($indice === false) return view('404');
@@ -109,7 +105,10 @@ class ClienteController extends Controller
         // $cliente = $aux[$chave];
         $cliente = Cliente::find($id);
 
-        return view('clientes.show')->with('cliente', $cliente);
+        if(isset($cliente)){
+            return json_encode($cliente);
+        }
+        return response("Cliente não encontrado", 404);
     }
 
     /**
@@ -124,9 +123,7 @@ class ClienteController extends Controller
         // $indice = array_search($id, array_column($aux, 'id'));
         // if($indice === false) return view('404');
         // $dados = $aux[$indice];
-        $dados = Cliente::find($id);
 
-        return view('clientes.edit', compact('dados'));
     }
 
     /**
@@ -138,7 +135,6 @@ class ClienteController extends Controller
      */
     public function update(Request $request, $id)
     {
-
         $cliente = Cliente::find($id);
 
         $cliente->fill([
@@ -148,7 +144,7 @@ class ClienteController extends Controller
         ]);
 
         $regras = [
-            'nome' => 'required|max:100|min:10',
+            'nome' => 'required|max:100|min:2',
             'telefone' => 'required|max:13|min:11',
             'email' => "required|unique:clientes,email,{$id}"
         ];
@@ -174,7 +170,7 @@ class ClienteController extends Controller
         // $aux[$indice] = $alterado;
         // session(['clientes' => $aux]);
 
-        return redirect()->route('clientes.index');
+        return response()->json($cliente);
     }
 
     /**
@@ -195,6 +191,6 @@ class ClienteController extends Controller
 
         $cliente->delete();
 
-        return redirect()->route('clientes.index');
+        return response()->json([], 201);
     }
 }

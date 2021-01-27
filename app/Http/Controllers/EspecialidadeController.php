@@ -35,10 +35,7 @@ class EspecialidadeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        return view('especialidades.create');
-    }
+    public function create(){}
 
     /**
      * Store a newly created resource in storage.
@@ -66,7 +63,7 @@ class EspecialidadeController extends Controller
 
         
         $regras = [
-            'nome' => 'required|max:30|min:5',
+            'nome' => 'required|max:30|min:2',
             'descricao' => 'required|max:250|min:5',
         ];
         $msgs = [
@@ -77,14 +74,14 @@ class EspecialidadeController extends Controller
         
         $request->validate($regras, $msgs);
         
-        Especialidade::create([
+        $especialidade = Especialidade::create([
             'nome' => $request->nome,
             'descricao' => $request->descricao,
         ]);
         // array_push($aux, $novo);
         // session(['especialidades' => $aux]);
 
-        return redirect()->route('especialidades.index');
+        return json_encode($especialidade);
     }
 
     /**
@@ -95,14 +92,21 @@ class EspecialidadeController extends Controller
      */
     public function show($id)
     {
-        $especialidade = Especialidade::find($id);
+        // $especialidade = Especialidade::find($id);
+
         // $aux = session('especialidades');
         // $indice = array_search($id, array_column($aux, 'id'));
         // if($indice === false) return view('404');
         // $chave = array_keys($aux)[$indice];
         // $especialidade = $aux[$chave];
 
-        return view('especialidades.show')->with('especialidade', $especialidade);
+        $especialidade = Especialidade::find($id);
+
+        if(isset($especialidade)){
+            return json_encode($especialidade);
+        }
+        return response("Cliente não encontrado", 404);
+
     }
 
     /**
@@ -113,14 +117,14 @@ class EspecialidadeController extends Controller
      */
     public function edit($id)
     {
-        $dados = Especialidade::find($id);
+        // $dados = Especialidade::find($id);
 
         // $aux = session('especialidades');
         // $indice = array_search($id, array_column($aux, 'id'));
         // if($indice === false) return view('404');
         // $dados = $aux[$indice];
 
-        return view('especialidades.edit', compact('dados'));
+        // return view('especialidades.edit', compact('dados'));
     }
 
     /**
@@ -145,13 +149,14 @@ class EspecialidadeController extends Controller
         // session(['especialidades' => $aux]);
 
         $especialidade = Especialidade::find($id);
+        
         $especialidade->fill([
             'nome' => $request->nome,
             'descricao' => $request->descricao,
         ]);
 
         $regras = [
-            'nome' => 'required|max:30|min:5',
+            'nome' => 'required|max:30|min:2',
             'descricao' => 'required|max:250|min:5',
         ];
         $msgs = [
@@ -164,8 +169,7 @@ class EspecialidadeController extends Controller
 
         $especialidade->save();
         
-        return redirect()->route('especialidades.index');
-    }
+        return response()->json($especialidade);    }
 
     /**
      * Remove the specified resource from storage.
@@ -183,6 +187,7 @@ class EspecialidadeController extends Controller
         $especialidade = Especialidade::find($id);
         $especialidade->delete();
 
-        return redirect()->route('especialidades.index');
+        return response()->json([], 201);
     }
+    
 }

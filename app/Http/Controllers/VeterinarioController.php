@@ -27,8 +27,9 @@ class VeterinarioController extends Controller
     public function index(Request $request)
     {
         // $veterinarios = session('veterinarios');
+        $especialidades = Especialidade::all();
         $veterinarios = Veterinario::all();
-        return view('veterinarios.index', compact('veterinarios'));
+        return view('veterinarios.index', compact('veterinarios', 'especialidades'));
     }
 
     /**
@@ -39,8 +40,9 @@ class VeterinarioController extends Controller
     public function create()
     {
         // $especialidades = session('especialidades');
-        $especialidades = Especialidade::all();
-        return view('veterinarios.create')->with('especialidades', $especialidades);
+
+        // $especialidades = Especialidade::all();
+        // return view('veterinarios.create')->with('especialidades', $especialidades);
     }
 
     /**
@@ -74,7 +76,7 @@ class VeterinarioController extends Controller
         // session(['veterinarios' => $aux]);
         
         $regras = [
-            'nome' => 'required|max:30|min:5',
+            'nome' => 'required|max:30|min:2',
             'crmv' => 'required|max:6|min:6',
         ];
         $msgs = [
@@ -85,13 +87,13 @@ class VeterinarioController extends Controller
         
         $request->validate($regras, $msgs);
         
-        Veterinario::create([
+        $veterinario = Veterinario::create([
             'nome' => $request->nome,
             'crmv' => $request->crmv,
             'especialidade_id' => $request->especialidades
         ]);
         
-        return redirect()->route('veterinarios.index');
+        return json_encode($veterinario);
     }
 
     /**
@@ -114,9 +116,12 @@ class VeterinarioController extends Controller
         // $especialidade = $especialidades[$especialidadeChave];
 
         // $veterinario['especialidade'] = $especialidade['nome'];
-        $veterinario = Veterinario::find($id);
+        $veterinario = Veterinario::with('especialidade')->find($id);
 
-        return view('veterinarios.show')->with('veterinario', $veterinario);
+        if(isset($veterinario)){
+            return json_encode($veterinario);
+        }
+        return response("Veterinario não encontrado", 404);
     }
 
     /**
@@ -131,10 +136,11 @@ class VeterinarioController extends Controller
         // $indice = array_search($id, array_column($aux, 'id'));
         // if($indice === false) return view('404');
         // $dados = $aux[$indice];
-        $dados = Veterinario::find($id);
-        $especialidades = Especialidade::all();
 
-        return view('veterinarios.edit', ['dados' => $dados, 'especialidades' => $especialidades]);
+        // $dados = Veterinario::find($id);
+        // $especialidades = Especialidade::all();
+
+        // return view('veterinarios.edit', ['dados' => $dados, 'especialidades' => $especialidades]);
     }
 
     /**
@@ -166,7 +172,7 @@ class VeterinarioController extends Controller
         ]);
 
         $regras = [
-            'nome' => 'required|max:30|min:5',
+            'nome' => 'required|max:30|min:2',
             'crmv' => 'required|max:6|min:6',
         ];
         $msgs = [
@@ -179,7 +185,7 @@ class VeterinarioController extends Controller
         
         $veterinario->save();
 
-        return redirect()->route('veterinarios.index');
+        return response()->json($veterinario);
     }
 
     /**
@@ -198,6 +204,6 @@ class VeterinarioController extends Controller
         $veterinario = Veterinario::find($id);
         $veterinario->delete();
 
-        return redirect()->route('veterinarios.index');
+        return response()->json([], 201);
     }
 }
